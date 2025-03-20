@@ -171,6 +171,7 @@ class Admin extends Component
             ['key' => 'email', 'label' => 'Email', 'class' => 'w-64', 'sortable' => false],
             ['key' => 'inquiry_details', 'label' => 'Inquiry Details', 'class' => 'w-42', 'sortable' => false],
             ['key' => 'inquiry_type', 'label' => 'Inquiry Type', 'class' => 'w-20', 'sortable' => false],
+            ['key' => 'created_at', 'label' => 'Date', 'format' => ['date', 'd/m/Y'], 'class' => 'w-20', 'sortable' => false],
             [
                 'key' => 'status',
                 'label' => 'Status',

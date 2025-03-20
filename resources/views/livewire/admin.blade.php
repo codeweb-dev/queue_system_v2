@@ -10,6 +10,12 @@
         ['value' => 'Financial', 'name' => 'Financial (Fee Concerns)'],
         ['value' => 'Other', 'name' => 'Other (Please specify in the next section)'],
     ];
+
+    $windows = [
+        ['value' => 0, 'name' => 'Select window'],
+        ['value' => 1, 'name' => 'Window 1'],
+        ['value' => 2, 'name' => 'Window 2'],
+    ];
 @endphp
 
 <div>
@@ -46,7 +52,7 @@
                         <x-button icon="o-check" class="text-green-500 btn-ghost btn-sm"
                             @click="$wire.openEditStatusModalApprove({{ $user['id'] }})" />
                     @else
-                        <x-button icon="o-trash" wire:click="delete({{ $user['id'] }})"
+                        <x-button icon="o-x-mark" wire:click="delete({{ $user['id'] }})"
                             wire:confirm="Do you want to delete this queue?" spinner
                             class="text-red-500 btn-ghost btn-sm" />
                     @endif
@@ -99,15 +105,13 @@
     <x-modal wire:model.defer="modalEditStatusToProcess" title="Change Queue Status">
         <div class="mb-5">
             <p class="mb-3">Are you sure you want to change the status to "Currently Serving"?</p>
-            <x-select label="Select Window" :options="[
-                ['value' => 1, 'name' => 'Window 1'],
-                ['value' => 2, 'name' => 'Window 2'],
-                ['value' => 3, 'name' => 'Window 3'],
-            ]" option-value="value" option-label="name" wire:model="window_number" required /> <!-- Ensure window_number is bound -->
+            <x-select label="Select Window" :options="$windows" option-value="value" option-label="name"
+                wire:model="window_number" required /> <!-- Ensure window_number is bound -->
         </div>
         <x-slot:actions>
             <x-button label="Cancel" @click="$wire.modalEditStatusToProcess = false" />
-            <x-button label="Confirm" class="btn-primary" wire:click="updateStatusToProcess" spinner /> <!-- Ensure button click event is handled -->
+            <x-button label="Confirm" class="btn-primary" wire:click="updateStatusToProcess" spinner />
+            <!-- Ensure button click event is handled -->
         </x-slot:actions>
     </x-modal>
 </div>

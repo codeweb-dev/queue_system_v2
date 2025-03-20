@@ -25,19 +25,19 @@
         </p>
         @endif --}}
 
-        <table class="table-auto border-collapse border border-gray-400 w-full text-center text-white">
+        <table class="table-auto border-collapse border border-gray-400 w-full text-center">
             <thead>
-                <tr class="bg-gray-600">
+                <tr>
                     <td class="border border-gray-400 px-4 py-2">Window No:</td>
                     <td class="border border-gray-400 px-4 py-2">1</td>
                     <td class="border border-gray-400 px-4 py-2">2</td>
-                    <td class="border border-gray-400 px-4 py-2">3</td>
+                    {{-- <td class="border border-gray-400 px-4 py-2">3</td> --}}
                 </tr>
             </thead>
             <tbody>
-                <tr class="bg-gray-800">
+                <tr>
                     <td class="border border-gray-400 px-4 py-2">Queue No:</td>
-                    @for ($i = 1; $i <= 3; $i++)
+                    @for ($i = 1; $i <= 2; $i++)
                         <td class="border border-gray-400 px-4 py-2">
                             @if (isset($windowQueues[$i]) && count($windowQueues[$i]) > 0)
                                 {{ $windowQueues[$i][0]['id'] }}
@@ -79,7 +79,7 @@
 
             <x-slot:actions>
                 <x-theme-toggle class="btn btn-circle" />
-                <x-button label="Admin" @click="$wire.modal = true" />
+                {{-- <x-button label="Admin" @click="$wire.modal = true" /> --}}
                 <x-button label="Join Queue" class="btn-primary" type="submit" spinner="save" />
             </x-slot:actions>
         </x-form>
