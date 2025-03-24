@@ -56,6 +56,8 @@
                             wire:confirm="Do you want to delete this queue?" spinner
                             class="text-red-500 btn-ghost btn-sm" />
                     @endif
+                    <x-button icon="o-arrow-left-end-on-rectangle" class="text-yellow-500 btn-ghost btn-sm"
+                        @click="$wire.openModalReason({{ $user['id'] }})" />
                 </div>
             @endscope
         </x-table>
@@ -111,6 +113,17 @@
         <x-slot:actions>
             <x-button label="Cancel" @click="$wire.modalEditStatusToProcess = false" />
             <x-button label="Confirm" class="btn-primary" wire:click="updateStatusToProcess" spinner />
+            <!-- Ensure button click event is handled -->
+        </x-slot:actions>
+    </x-modal>
+
+    <x-modal wire:model.defer="modalReason" title="Remove from Queue?">
+        <div class="mb-5">
+            <x-textarea label="Reason for queue removal" wire:model="reason_details" rows="5" required inline />
+        </div>
+        <x-slot:actions>
+            <x-button label="Cancel" @click="$wire.modalReason = false" />
+            <x-button label="Confirm" class="btn-primary" wire:click="updateReason" spinner />
             <!-- Ensure button click event is handled -->
         </x-slot:actions>
     </x-modal>

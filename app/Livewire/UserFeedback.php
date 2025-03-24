@@ -16,6 +16,7 @@ class UserFeedback extends Component
 
     public $full_name = '';
     public $comments = '';
+    public $inquiry_type = '';
     public $anonymous = false;
     public $reaction = null; // Ensure reaction starts as null
 
@@ -24,12 +25,14 @@ class UserFeedback extends Component
         $this->validate([
             'full_name' => $this->anonymous ? 'nullable' : 'required|string|max:255',
             'comments' => 'nullable|string',
+            'inquiry_type' => 'string',
             'reaction' => 'required|in:angry,sad,neutral,happy,very_happy',
         ]);
 
         Feedback::create([
             'full_name' => $this->anonymous ? 'Anonymous' : $this->full_name,
             'comments' => $this->comments,
+            'inquiry_type' => $this->inquiry_type,
             'anonymous' => $this->anonymous,
             'reaction' => $this->reaction,
         ]);

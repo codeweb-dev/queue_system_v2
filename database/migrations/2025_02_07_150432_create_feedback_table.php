@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('full_name')->nullable();
             $table->text('comments')->nullable();
+            $table->string('inquiry_type');
             $table->boolean('anonymous')->default(false);
             $table->enum('reaction', ['angry', 'sad', 'neutral', 'happy', 'very_happy'])->nullable();
             $table->timestamps();

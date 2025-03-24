@@ -1,3 +1,17 @@
+@php
+    $inquiry_type = [
+        ['value' => '', 'name' => 'Select Inquiry Type', 'disabled' => true],
+        ['value' => 'Academic', 'name' => 'Academic (Academic Advising, Course Crediting or Concerns)'],
+        ['value' => 'Complaints', 'name' => 'Complaints (Concerns regarding Department)'],
+        [
+            'value' => 'Document Handling',
+            'name' => 'Document Handling (Request for or Submission of Academic Documents)',
+        ],
+        ['value' => 'Financial', 'name' => 'Financial (Fee Concerns)'],
+        ['value' => 'Other', 'name' => 'Other (Please specify in the next section)'],
+    ];
+@endphp
+
 <x-card title="How was your experience?" subtitle="Your feedback helps us improve our service" shadow separator>
     <form wire:submit.prevent="submitFeedback" class="space-y-4">
         <label class="block font-semibold">Reaction</label>
@@ -21,6 +35,9 @@
 
         <x-input label="Full Name" wire:model="full_name" :disabled="$anonymous" />
 
+        <label class="block font-semibold text-sm">Inquiry Type</label>
+        <x-select required :options="$inquiry_type" option-value="value" option-label="name" wire:model="inquiry_type" />
+
         <x-textarea label="Additional comments (optional)" wire:model="comments"
             placeholder="Tell us more about your experience..." hint="Max 1000 chars" rows="5" inline />
 
@@ -29,7 +46,7 @@
         <x-button label="Submit Feedback" class="btn-primary" type="submit" spinner="submitFeedback" />
 
         @if (session()->has('message'))
-        <p class="mt-2 text-green-500">{{ session('message') }}</p>
+            <p class="mt-2 text-green-500">{{ session('message') }}</p>
         @endif
     </form>
 </x-card>

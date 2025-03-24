@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Mail\QueueStatusUpdated;
+use App\Mail\ReasonDetails;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Collection;
@@ -23,6 +24,7 @@ class Admin extends Component
 
     public bool $modalEditStatus = false;
     public bool $modalEditStatusToProcess = false;
+    public bool $modalReason = false;
 
     public array $sortBy = ['column' => 'id', 'direction' => 'asc'];
     public Collection $users;
@@ -37,6 +39,8 @@ class Admin extends Component
     public $notify_sms = false;
     public $notify_email = false;
     public $window_number = null; // Initialize window_number
+
+    public $reason_details = '';
 
     protected $rules = [
         'full_name' => 'required|string|max:255',
@@ -60,6 +64,12 @@ class Admin extends Component
     {
         $this->userIdToUpdate = $userId;
         $this->modalEditStatus = true;
+    }
+
+    public function openModalReason($userId)
+    {
+        $this->userIdToUpdate = $userId;
+        $this->modalReason = true;
     }
 
     public function mount()
@@ -146,6 +156,46 @@ class Admin extends Component
         $this->refreshUsers();
     }
 
+    public function updateReason()
+    {
+        $this->validate([
+            'reason_details' => 'required|string', // Ensure window_number is validated
+        ]);
+
+        $queue = Queue::find($this->userIdToUpdate);
+
+        if ($queue) {
+            // Only send email if notify_email is true
+            if ($queue->notify_email) {
+                try {
+                    Mail::to($queue->email)->send(new ReasonDetails($queue, $this->reason_details));
+                } catch (\Exception $e) {
+                    $this->error("Failed to send email notification.", position: 'toast-bottom');
+                }
+            }
+
+            if ($queue->notify_sms) {
+                try {
+                    Http::asForm()->post(env('SMS_API_URL'), [
+                        'api_token' => env('SMS_API_TOKEN'),
+                        'message' => "You have been removed from the queue for the following reason/s: " . $this->reason_details,
+                        'phone_number' => $queue->contact_number,
+                    ]);
+                } catch (\Exception $e) {
+                    $this->error("Failed to send SMS notification.", position: 'toast-bottom');
+                }
+            }
+
+            $this->success("Succesfully removed.", position: 'toast-bottom');
+            $queue->delete();
+        } else {
+            $this->error("Queue #{$this->userIdToUpdate} not found.", position: 'toast-bottom');
+        }
+
+        $this->resetModals();
+        $this->refreshUsers();
+    }
+
     // Delete action
     public function delete($id): void
     {
@@ -217,6 +267,7 @@ class Admin extends Component
         $this->modal = false;
         $this->modalEditStatus = false;
         $this->modalEditStatusToProcess = false;
+        $this->modalReason = false;
         $this->userIdToUpdate = null;
         $this->window_number = null;
     }
